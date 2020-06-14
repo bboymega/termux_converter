@@ -1,0 +1,62 @@
+#!/bin/bash
+url=$1
+clear
+echo "Termux Converter script"
+echo "----------Last updated Jun 14 2020----------"
+echo "--------------------------------------------"
+echo "1: Convert to mp4"
+echo "2: Convert to mp3"
+echo "3: Advanced Conversion"
+echo "q/Default: quit"
+read n
+file=$url
+file_name="${url##*/}"
+name="${file_name%.*}"
+[ ! -d "./storage/shared/ffmpeg" ] && mkdir "./storage/shared/ffmpeg" 
+if [ "$n" == '1' ]; then
+clear
+echo "Please select output quality (default : original)"
+echo "0: 2160p (3840*2160)"
+echo "1: 1440p (2560*1440)"
+echo "2: 1080p (1920*1080)"
+echo "3: 720p (1280*720)"
+echo "4: 480p (854*480)"
+echo "5: 360p (640*360)"
+echo "6: 240p (426*240)"
+read q
+ext="0"
+[[ $q == "0" ]] && ffmpeg -i "$file" -vf scale=3840:2160 -qscale 0 "./storage/shared/ffmpeg/${name}_2160p.mp4" && ext="1"
+[[ $q == "1" ]] && ffmpeg -i "$file" -vf scale=2560:1440 -qscale 0 "./storage/shared/ffmpeg/${name}_1440p.mp4" && ext="1"
+[[ $q == "2" ]] && ffmpeg -i "$file" -vf scale=1920:1080 -qscale 0 "./storage/shared/ffmpeg/${name}_1080p.mp4" && ext="1"
+[[ $q == "3" ]] && ffmpeg -i "$file" -vf scale=1280:720 -qscale 0 "./storage/shared/ffmpeg/${name}_720p.mp4" && ext="1"
+[[ $q == "4" ]] && ffmpeg -i "$file" -vf scale=854:480 -qscale 0 "./storage/shared/ffmpeg/${name}_480p.mp4" && ext="1"
+[[ $q == "5" ]] && ffmpeg -i "$file" -vf scale=640:360 -qscale 0 "./storage/shared/ffmpeg/${name}_360p.mp4" && ext="1"
+[[ $q == "6" ]] && ffmpeg -i "$file" -vf scale=426:240 -qscale 0 "./storage/shared/ffmpeg/${name}_240p.mp4" && ext="1"
+[[ $ext == "0" ]] && ffmpeg -i "$file" -qscale 0 "./storage/shared/ffmpeg/${name}.mp4"
+else
+if [ "$n" == '2' ]; then
+clear
+echo "Please select output quality (default : 320k)"
+echo "0: 320k"
+echo "1: 256k"
+echo "2: 192k"
+echo "3: 128k"
+echo "4: 64k"
+read q
+ext="0"
+[[ $q == "1" ]] && ffmpeg -i "$file" -qscale 0 -ab 256k  "./storage/shared/ffmpeg/${name}.mp3" && ext="1"
+[[ $q == "2" ]] && ffmpeg -i "$file" -qscale 0 -ab 192k  "./storage/shared/ffmpeg/${name}.mp3" && ext="1"
+[[ $q == "3" ]] && ffmpeg -i "$file" -qscale 0 -ab 128k  "./storage/shared/ffmpeg/${name}.mp3" && ext="1"
+[[ $q == "4" ]] && ffmpeg -i "$file" -qscale 0 -ab 64k  "./storage/shared/ffmpeg/${name}.mp3" && ext="1"
+[[ $ext == "0" ]] && ffmpeg -i "$file" -qscale 0 -ab 320k  "./storage/shared/ffmpeg/${name}.mp3"
+else
+if [ "$n" == '3' ]; then
+clear
+echo "Output Format (extension):"
+echo "e.g. |mp4|webm|mkv|avi|mov| for video and |mp3|wav|flac|aac|ogg| for audio"
+read f
+ffmpeg -i "$file" -qscale 0 "./storage/shared/ffmpeg/${name}.${f}"
+fi
+fi
+fi
+rm -f "$url"
