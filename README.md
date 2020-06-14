@@ -1,6 +1,6 @@
 # Termux Converter Script
 Termux Converter Script
-This script requires **ffmpeg, python, wget ** to function.
+This script requires **ffmpeg, python, wget** to function.
 
 ![screenshot.png](/screenshot.png)
 
